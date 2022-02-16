@@ -1,3 +1,3 @@
 # searchforpeople
 
-search-for-people.surge.sh
+https://search-for-people.surge.sh/
