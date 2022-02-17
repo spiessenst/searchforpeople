@@ -10,13 +10,22 @@
       integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
       crossorigin="anonymous"
     />
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAd4N9sI0o9EBH_tKmR_PSpupKE6SDpom8&callback=initMap&v=weekly"
+      async
+    ></script>
+
     <script defer src="./js/index.js"></script>
+
     <link rel="stylesheet" href="./css/style.css" />
 
     <title>People Search</title>
   </head>
   <body>
-    <ul></ul>
+    <div class="modal">
+      <button class="btn btn-success">close</button>
+      <div class="map" id="map"></div>
+    </div>
     <div class="container-md">
       <h3>Search for people</h3>
 
@@ -30,9 +39,7 @@
       </form>
 
       <div class="d-flex justify-content-center">
-        <div class="spinner-border" role="status">
-          <span class="visually-hidden">Loading...</span>
-        </div>
+        <div class="spinner-border" role="status"></div>
       </div>
 
       <div class="row align-items-start"></div>
