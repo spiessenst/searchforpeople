@@ -3,6 +3,25 @@ const cards = document.querySelector(".row");
 const loader = document.querySelector(".spinner-border");
 const search = document.querySelector("form input[type='search']");
 const mod = document.querySelector(".modal");
+const buttonAll = document.querySelector("#btnall");
+
+buttonAll.onclick = function (e) {
+  const locations = data.results
+    .filter((person) => {
+      return person.id.value !== null;
+    })
+    .reduce((acc, person) => {
+      acc.push([
+        person.name.first + " " + person.name.last,
+        person.location.coordinates.latitude,
+        person.location.coordinates.longitude,
+        person.picture.large,
+      ]);
+      return acc;
+    }, []);
+  map(locations);
+  mod.style.display = "block";
+};
 
 mod.onclick = function (e) {
   if (e.target.classList.contains("btn")) {
@@ -15,11 +34,17 @@ cards.onclick = function (e) {
     let per = data.results.filter((person) => {
       return person.id.value == e.target.dataset.personid;
     });
-    let lat = per[0].location.coordinates.latitude;
-    let lon = per[0].location.coordinates.longitude;
-    let img = per[0].picture.large;
 
-    initMap(lat, lon, img);
+    const locations = [
+      [
+        per[0].name.first + " " + per[0].name.last,
+        per[0].location.coordinates.latitude,
+        per[0].location.coordinates.longitude,
+        per[0].picture.large,
+      ],
+    ];
+
+    map(locations, 5);
     mod.style.display = "block";
   }
 };
@@ -37,10 +62,9 @@ search.oninput = function (e) {
 };
 
 let data = [];
-let buttonclass = "";
 
 async function getData() {
-  loader.style.display = "content";
+  loader.style.display = "block";
   try {
     const response = await fetch("https://randomuser.me/api/?results=200");
     data = await response.json();
@@ -88,21 +112,36 @@ async function render(str = "") {
 
 getData();
 
-let map;
-
-function initMap(lat = 0, lon = 0, img) {
-  map = new google.maps.Map(document.getElementById("map"), {
-    center: new google.maps.LatLng(lat, lon),
-    zoom: 5,
+function map(locations, zoom = 3) {
+  let map = new google.maps.Map(document.getElementById("map"), {
+    zoom: zoom,
+    center: new google.maps.LatLng(locations[0][1], locations[0][2]),
   });
 
-  const image = {
-    url: img,
-    scaledSize: new google.maps.Size(50, 50),
-  };
-  const Marker = new google.maps.Marker({
-    position: new google.maps.LatLng(lat, lon),
-    map,
-    icon: image,
-  });
+  let infowindow = new google.maps.InfoWindow();
+
+  let marker, i;
+
+  for (i = 0; i < locations.length; i++) {
+    const image = {
+      url: locations[i][3],
+      scaledSize: new google.maps.Size(50, 50),
+    };
+    marker = new google.maps.Marker({
+      position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+      map,
+      icon: image,
+    });
+
+    google.maps.event.addListener(
+      marker,
+      "click",
+      (function (marker, i) {
+        return function () {
+          infowindow.setContent(locations[i][0]);
+          infowindow.open(map, marker);
+        };
+      })(marker, i)
+    );
+  }
 }
