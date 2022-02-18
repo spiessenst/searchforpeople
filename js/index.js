@@ -7,9 +7,7 @@ const buttonAll = document.querySelector("#btnall");
 
 buttonAll.onclick = function (e) {
   const locations = data.results
-    .filter((person) => {
-      return person.id.value !== null;
-    })
+    .filter((person) => person.id.value !== null)
     .reduce((acc, person) => {
       acc.push([
         person.name.first + " " + person.name.last,
@@ -17,6 +15,7 @@ buttonAll.onclick = function (e) {
         person.location.coordinates.longitude,
         person.picture.large,
       ]);
+
       return acc;
     }, []);
   map(locations);

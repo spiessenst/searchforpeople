@@ -29,7 +29,7 @@ h3 {
 }
 
 .map {
-  height: 90vh;
+  height: calc(100% - 60px);
   width: 100%;
 }
 
