@@ -18,7 +18,7 @@ buttonAll.onclick = function (e) {
 
       return acc;
     }, []);
-  map(locations);
+  mapBuild(locations);
   mod.style.display = "block";
 };
 
@@ -43,7 +43,7 @@ cards.onclick = function (e) {
       ],
     ];
 
-    map(locations, 5);
+    mapBuild(locations, 5);
     mod.style.display = "block";
   }
 };
@@ -110,12 +110,19 @@ async function render(str = "") {
 }
 
 getData();
-
-function map(locations, zoom = 3) {
-  let map = new google.maps.Map(document.getElementById("map"), {
-    zoom: zoom,
-    center: new google.maps.LatLng(locations[0][1], locations[0][2]),
-  });
+let map = "";
+function mapBuild(locations, zoom = 3) {
+  if (locations.length > 1) {
+    map = new google.maps.Map(document.getElementById("map"), {
+      zoom: zoom,
+      center: new google.maps.LatLng(0, 0),
+    });
+  } else {
+    map = new google.maps.Map(document.getElementById("map"), {
+      zoom: zoom,
+      center: new google.maps.LatLng(locations[0][1], locations[0][2]),
+    });
+  }
 
   let infowindow = new google.maps.InfoWindow();
 
